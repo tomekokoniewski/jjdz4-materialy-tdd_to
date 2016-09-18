@@ -4,5 +4,6 @@ public enum EmissionLevel {
     LOW,
     NORMAL,
     HIGH,
-    ILLEGAL, NONE;
+    ILLEGAL,
+    NONE;
 }
