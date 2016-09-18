@@ -18,6 +18,16 @@ public class CarUnitTest {
     }
 
     @Test
+    public void honda_engine_should_be_running_after_ignition() throws Exception {
+        // given
+        Car sut = new CarFactory().forBrand(Brand.HONDA).build();
+        // when
+        sut.ignite();
+        // then
+        Assert.assertTrue("OMG! Car is not running after ignition", sut.isRunning());
+    }
+
+    @Test
     public void honda_emmission_level_should_be_normal() throws Exception {
         // given
         Car sut = new CarFactory().forBrand(Brand.HONDA).build();
