@@ -24,9 +24,10 @@ public class CarUnitTest {
         // when
         sut.ignite();
         // then
-        Assert.assertTrue("emmission level should be normal", EmissionLevel.NORMAL==sut.measurePollution());
+        Assert.assertEquals("emmission level should be normal", EmissionLevel.NORMAL, sut.measurePollution());
     }
 
+    @Ignore
     @Test
     public void vw_emmission_level_should_be_normal() throws Exception {
         // given
@@ -35,7 +36,7 @@ public class CarUnitTest {
         sut.ignite();
         ((VW) sut).setLabMode(false);
         // then
-        Assert.assertTrue(EmissionLevel.NORMAL==sut.measurePollution());
+        Assert.assertEquals("emmission level should be normal", EmissionLevel.NORMAL, sut.measurePollution());
     }
 
     @Test(expected = Exception.class)
@@ -52,7 +53,7 @@ public class CarUnitTest {
         // when
         sut.ignite();
         // then
-        Assert.assertEquals(EmissionLevel.NORMAL, sut.measurePollution());
+        Assert.assertEquals("emmission level should be normal", EmissionLevel.NORMAL, sut.measurePollution());
     }
 
 }
