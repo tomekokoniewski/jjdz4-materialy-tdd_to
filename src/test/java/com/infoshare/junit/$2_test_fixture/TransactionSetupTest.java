@@ -20,14 +20,6 @@ import static org.junit.Assert.assertThat;
  */
 public class TransactionSetupTest {
 
-    @BeforeClass
-    public static void createDBConnection() {
-    }
-
-    @Before
-    public void prepareTransactions() {
-    }
-
     @Test
     public void new_account_should_not_have_any_transactions() {
         String owner = "Kent Beck";
@@ -65,11 +57,4 @@ public class TransactionSetupTest {
         assertThat(account.historyBetween(start, end), is(not(empty())));
     }
 
-    @After
-    public void cleanUpTransactions() {
-    }
-
-    @AfterClass
-    public static void closeConnection() {
-    }
 }
