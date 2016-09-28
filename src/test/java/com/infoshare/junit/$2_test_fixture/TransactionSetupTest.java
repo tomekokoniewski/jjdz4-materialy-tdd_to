@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.infoshare.junit.banking.Account;
 import com.infoshare.junit.banking.Transaction;
 import org.junit.*;
+import org.junit.experimental.categories.Category;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public class TransactionSetupTest {
         assertThat(account.history(), is(empty()));
     }
 
+    @Category(TransactionHistoryTests.class)
     @Test
     public void should_find_all_transactions() {
         Account account = new Account("Kent Beck");
@@ -41,6 +43,7 @@ public class TransactionSetupTest {
         assertThat(account.history(), hasSize(transactions.size()));
     }
 
+    @Category(TransactionHistoryTests.class)
     @Test
     public void should_find_transactions_from_specific_period() {
         Account account = new Account("Kent Beck");
