@@ -31,6 +31,7 @@ public class TransactionSetupTest {
     @BeforeClass
     public static void createTransactionLog() {
         activityMonitor = new LoggingActivityMonitor();
+        activityMonitor.connect();
     }
 
     @Before
@@ -73,7 +74,7 @@ public class TransactionSetupTest {
     }
 
     @Test(expected = DuplicatedTransactionException.class)
-    public void should_not_register_same_transaction_twice() throws DuplicatedTransactionException {
+    public void should_not_register_same_transaction_twice() throws DuplicatedTransactionException, NullTransactionException {
         Transaction duplicate = account.history().iterator().next();
         account.register(duplicate);
     }
