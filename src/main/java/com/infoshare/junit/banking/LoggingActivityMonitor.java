@@ -11,11 +11,11 @@ public class LoggingActivityMonitor implements AccountMonitor {
     @Override
     public void connect() {
         Stopwatch watch = Stopwatch.createStarted();
-        System.out.println("LoggingActivityMonitor created");
         try {
             Thread.sleep(1000);
-            System.out.println("LoggingActivityMonitor connected after " + watch.elapsed(TimeUnit.MILLISECONDS)+"ms");
             watch.stop();
+            System.out.println("");
+            System.out.println("LoggingActivityMonitor connected after " + watch.elapsed(TimeUnit.MILLISECONDS)+"ms");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -23,6 +23,7 @@ public class LoggingActivityMonitor implements AccountMonitor {
 
     @Override
     public void close() {
+        System.out.println("");
         System.out.println("LoggingActivityMonitor closed");
     }
 
