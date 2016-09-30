@@ -1,6 +1,5 @@
 package com.infoshare.junit.banking;
 
-import java.util.Observable;
 import com.google.common.base.Stopwatch;
 
 import java.util.Observable;
