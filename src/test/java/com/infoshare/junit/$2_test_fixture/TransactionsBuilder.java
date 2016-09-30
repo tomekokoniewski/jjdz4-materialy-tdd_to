@@ -2,6 +2,7 @@ package com.infoshare.junit.$2_test_fixture;
 
 import com.infoshare.junit.banking.Account;
 import com.infoshare.junit.banking.DuplicatedTransactionException;
+import com.infoshare.junit.banking.NullTransactionException;
 import com.infoshare.junit.banking.Transaction;
 
 import java.math.BigDecimal;
@@ -50,7 +51,7 @@ public class TransactionsBuilder {
                 LocalDateTime date = getRandomDate();
                 Transaction transaction = new Transaction(BigDecimal.valueOf(value), date);
                 account.register(transaction);
-            } catch (DuplicatedTransactionException e) {
+            } catch (DuplicatedTransactionException|NullTransactionException e) {
                 e.printStackTrace();
             }
         });

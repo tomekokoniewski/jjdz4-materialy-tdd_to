@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 public class TestTransactions {
-    private static final int TRANSACTION_COUNT = 10;
+    private static final int DEFAULT_AMOUNT = 100;
     public static final int HUGE_AMOUNT = 1000000;
 
     public static void smallValueTransactionsFor(Account account) {
@@ -14,7 +14,7 @@ public class TestTransactions {
                 .after(LocalDateTime.of(2015, Month.DECEMBER, 1, 0, 0))
                 .before(LocalDateTime.now())
                 .valueBetween(1,10)
-                .totalOf(20)
+                .totalOf(DEFAULT_AMOUNT)
                 .register(account);
     }
 
@@ -23,7 +23,7 @@ public class TestTransactions {
                 .after(LocalDateTime.of(2015, Month.DECEMBER, 1, 0, 0))
                 .before(LocalDateTime.now())
                 .valueBetween(1000000,100000000)
-                .totalOf(20)
+                .totalOf(DEFAULT_AMOUNT)
                 .register(account);
     }
 

@@ -24,7 +24,10 @@ public class Account extends Observable {
         return ImmutableSet.copyOf(transactions);
     }
 
-    public void register(Transaction transaction) throws DuplicatedTransactionException {
+    public void register(Transaction transaction) throws DuplicatedTransactionException, NullTransactionException {
+        if (transaction==null) {
+            throw new NullTransactionException();
+        }
         if (transactions.contains(transaction)) {
             throw new DuplicatedTransactionException();
         }
