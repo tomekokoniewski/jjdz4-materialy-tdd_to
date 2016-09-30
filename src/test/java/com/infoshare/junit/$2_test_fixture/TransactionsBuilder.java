@@ -20,15 +20,26 @@ public class TransactionsBuilder {
     private long diffMinutes;
     private long minValue;
     private long maxValue;
+    private DateGenerator dateGenerator = new LinearDateGenerator();
 
     public TransactionsBuilder after(LocalDateTime dateTime) {
         after = dateTime;
         return this;
     }
 
+    public TransactionsBuilder withRandomDates() {
+        dateGenerator = new RandomDateGenerator();
+        return this;
+    }
+
+    public TransactionsBuilder withLinearDates() {
+        dateGenerator = new LinearDateGenerator();
+        return this;
+    }
+
     public TransactionsBuilder before(LocalDateTime dateTime) {
         before = dateTime;
-        diffMinutes = ChronoUnit.MINUTES.between(after,before);
+        diffMinutes = ChronoUnit.MINUTES.between(after, before);
         return this;
     }
 
@@ -46,19 +57,34 @@ public class TransactionsBuilder {
     public void register(Account account) {
         Random rand = new Random();
         DoubleStream doubles = rand.doubles(total, minValue, maxValue);
+        long d = diffMinutes / total;
+        final int[] transactionCount = {0};
         doubles.forEach(value -> {
             try {
-                LocalDateTime date = getRandomDate();
-                Transaction transaction = new Transaction(BigDecimal.valueOf(value), date);
+                LocalDateTime nextDate = dateGenerator.getNextDate(after, d, transactionCount[0]);
+                Transaction transaction = new Transaction(BigDecimal.valueOf(value), nextDate);
                 account.register(transaction);
-            } catch (DuplicatedTransactionException|NullTransactionException e) {
+                transactionCount[0]++;
+            } catch (DuplicatedTransactionException | NullTransactionException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    private LocalDateTime getRandomDate() {
-        return after.plusMinutes(rand.nextInt((int) diffMinutes + 1));
-    }
+}
 
+interface DateGenerator {
+    LocalDateTime getNextDate(LocalDateTime start, long periodBetweenDates, int transactionNum);
+}
+
+class LinearDateGenerator implements DateGenerator {
+    public LocalDateTime getNextDate(LocalDateTime start, long periodBetweenDates, int transactionNum) {
+        return start.plusMinutes(periodBetweenDates* transactionNum);
+    }
+}
+
+class RandomDateGenerator implements DateGenerator {
+    public LocalDateTime getNextDate(LocalDateTime start, long periodBetweenDates,int transactionNum){
+        return start.plusMinutes(new Random().nextInt((int)periodBetweenDates+1));
+    }
 }
