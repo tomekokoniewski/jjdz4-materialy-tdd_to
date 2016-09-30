@@ -24,7 +24,6 @@ public class TransactionSetupTest {
 
     private LoggingActivityMonitor accountActivity;
     private Account account;
-    private ImmutableList<Transaction> transactions;
     private static AccountMonitor activityMonitor;
 
     @BeforeClass
