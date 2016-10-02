@@ -1,6 +1,5 @@
 package com.infoshare.junit.$2_test_fixture;
 
-import com.google.common.collect.ImmutableList;
 import com.infoshare.junit.banking.*;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -72,7 +71,7 @@ public class TransactionSetupTest {
     }
 
     @Test(expected = DuplicatedTransactionException.class)
-    public void should_not_register_same_transaction_twice() throws DuplicatedTransactionException, NullTransactionException {
+    public void should_not_register_same_transaction_twice() throws DuplicatedTransactionException, InvalidTransactionException {
         Transaction duplicate = account.history().iterator().next();
         account.register(duplicate);
     }

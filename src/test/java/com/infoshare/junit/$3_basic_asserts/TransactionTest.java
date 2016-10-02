@@ -1,20 +1,19 @@
 package com.infoshare.junit.$3_basic_asserts;
 
-import com.infoshare.junit.$2_test_fixture.TestTransactions;
 import com.infoshare.junit.$2_test_fixture.TransactionsBuilder;
 import com.infoshare.junit.banking.Account;
 import com.infoshare.junit.banking.Transaction;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.math.MathContext;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Random;
 import java.util.Set;
+import java.util.stream.DoubleStream;
 
 import static org.junit.Assert.*;
 
@@ -30,59 +29,65 @@ public class TransactionTest {
         new TransactionsBuilder()
                 .after(LocalDateTime.of(2015, Month.DECEMBER, 1, 0, 0))
                 .before(LocalDateTime.of(2016, Month.APRIL, 30, 0, 0))
-                .valueBetween(1,100000)
+                .valueBetween(1, 100000)
                 .totalOf(TRANSACTION_COUNT)
                 .register(account);
     }
 
     @Test
-    public void account_should_change_history_after_adding_transaction() throws Exception {
+    public void account_balance_should_be_equal_to_sum_of_transactions() throws Exception {
+        BigDecimal historyBalance = sumOfTransactions(account.history());
+// uncomment to see error message
+//        account.register(new Transaction(BigDecimal.TEN,LocalDateTime.now()));
+        assertEquals(historyBalance, account.getBalance());
+    }
+
+    @Test
+    public void registering_transaction_should_change_balance_1() throws Exception {
+        // given
+        BigDecimal originalBalance = account.getBalance();
+        // when
+        new TransactionsBuilder().value(100).totalOf(1).register(account);
+        // then
+        assertFalse(account.getBalance().equals(originalBalance));
+    }
+
+    @Test
+    public void registering_transaction_should_change_balance_2() throws Exception {
+        // given
+        BigDecimal originalBalance = account.getBalance();
+        // when
+        new TransactionsBuilder().value(100).totalOf(1).register(account);
+        // then
+        assertTrue(account.getBalance().doubleValue()>originalBalance.doubleValue());
+    }
+
+    @Test
+    public void registering_transaction_should_change_history() throws Exception {
         //given
         Set<Transaction> originalHistory = account.history();
-        //when
-        new TransactionsBuilder().valueBetween(100,1000).totalOf(1).register(account);
+        // when
+        new TransactionsBuilder().valueBetween(100, 1000).totalOf(1).register(account);
         // then
-        assertArrayEquals(originalHistory.toArray(), account.history().toArray());
+        assertNotEquals(originalHistory, account.history());
     }
 
     @Test
-    public void test_assert_same(){
+    public void account_should_not_change_history_without_adding_transaction() {
         Set<Transaction> historyOne = account.history();
         Set<Transaction> historyTwo = account.history();
-        assertSame(historyOne, historyTwo);
+
+// uncomment to fail test - assertSame asserts that two objects refer to the same object
+//        assertSame("history shouldn't change", historyOne, historyTwo);
+
+// assertEquals - asserts that two objects are equals
+        assertEquals("history shouldn't change", historyOne, historyTwo);
     }
 
-    @Test
-    public void compare_history_arrays() {
-        Transaction[] historyOne = account.history().toArray(new Transaction[]{});
-        Transaction[] historyTwo = account.history().toArray(new Transaction[]{});
-        Arrays.fill(historyTwo, new Transaction(BigDecimal.TEN,LocalDateTime.now()));
-        assertArrayEquals(historyOne,historyTwo);
+    private BigDecimal sumOfTransactions(Collection<Transaction> transactions) {
+        return transactions.stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, (acc, value) -> acc.add(value, MathContext.DECIMAL32));
     }
-
-    @Test
-    public void new_account_should_have_empty_history() {
-        Account emptyAccount = new Account("Erich Gamma");
-        assertEquals(emptyAccount.history().toArray(), new Transaction[]{});
-    }
-
-    @Test
-    public void new_account_should_not_have_any_transactions_1() {
-        Account emptyAccount = new Account("Erich Gamma");
-        assertSame(emptyAccount.history(), new HashSet<Transaction>());
-    }
-
-    @Test
-    public void new_account_should_not_have_any_transactions_2() {
-        Account emptyAccount = new Account("Erich Gamma");
-        assertNotNull(emptyAccount.history());
-    }
-
-    @Test
-    public void new_account_should_not_have_any_transactions_3() {
-        Account emptyAccount = new Account("Erich Gamma");
-        assertTrue(emptyAccount.history().size()==0);
-    }
-
 }
 
